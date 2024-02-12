@@ -32,28 +32,34 @@ def generate_image(text_prompt):
       "Authorization": "sk-sjF5Jp2SUiywg8IlGvUSsJlDLd1OPtLIRneprV5fN5dBASRW",
     }
 
-    response = requests.post(
-      url,
-      headers=headers,
-      json=body,
-    )
+    try:
+        response = requests.post(
+          url,
+          headers=headers,
+          json=body,
+        )
 
-    if response.status_code != 200:
-        raise Exception("Non-200 response: " + str(response.text))
+        response.raise_for_status()
 
-    data = response.json()
+        data = response.json()
 
-    # make sure the out directory exists
-    if not os.path.exists("./out"):
-        os.makedirs("./out")
+        # make sure the out directory exists
+        if not os.path.exists("./out"):
+            os.makedirs("./out")
 
-    if "caldas" in text_prompt.lower():
-        return "unique_name_message"
+        if "caldas" in text_prompt.lower():
+            return "invalid_search_flag"
+        
+        image = data["artifacts"][0]
+        with open(f'./out/txt2img_{image["seed"]}.png', "wb") as f:
+            f.write(base64.b64decode(image["base64"]))
+        return f'txt2img_{image["seed"]}.png'
     
-    image = data["artifacts"][0]
-    with open(f'./out/txt2img_{image["seed"]}.png', "wb") as f:
-        f.write(base64.b64decode(image["base64"]))
-    return f'txt2img_{image["seed"]}.png'
+    except requests.exceptions.HTTPError as err:
+        if err.response.status_code == 403:
+            return "invalid_search_flag"
+        else:
+            raise err
 
 def main():
     st.title("Text to Image Generator")
@@ -65,8 +71,8 @@ def main():
     if st.button("Generate Image"):
         if text_prompt:
             generated_image = generate_image(text_prompt)
-            if generated_image == "unique_name_message":
-                st.error("We could not find an image that matches your search.")
+            if generated_image == "invalid_search_flag":
+                st.error("Your search is flagged as invalid.")
             else:
                 st.image(f'./out/{generated_image}', caption='Generated Image', use_column_width=True)
                 st.success("Image generated successfully!")
