@@ -62,7 +62,7 @@ def main():
     st.title("Text to Image Generator")
 
     st.write("This app generates images based on given text prompts.")
-    st.markdown(####"PLEASE NOT THESE ARE AI GENERATED IMAGES AND MAY NOT BE ACCURATE!")
+    st.markdown("####PLEASE NOT THESE ARE AI GENERATED IMAGES AND MAY NOT BE ACCURATE!")
 
     text_prompt = st.text_input("Enter text prompt")
 
