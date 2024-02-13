@@ -62,7 +62,6 @@ def main():
     st.title("Text to Image Generator")
 
     st.write("This app generates images based on given text prompts.")
-    st.warning("PLEASE NOT THESE ARE AI GENERATED IMAGES AND MAY NOT BE ACCURATE!")
 
     text_prompt = st.text_input("Enter text prompt")
 
@@ -78,6 +77,7 @@ def main():
                 st.success("Image generated successfully!")
         else:
             st.warning("Please enter a text prompt.")
+     st.warning("PLEASE NOT THESE ARE AI GENERATED IMAGES AND MAY NOT BE ACCURATE!")
 
 if __name__ == "__main__":
     main()
