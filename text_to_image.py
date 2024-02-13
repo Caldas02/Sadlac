@@ -70,7 +70,7 @@ def main():
             if generated_image == "invalid_search_flag":
                 st.error("Your search is flagged as invalid.")
             elif generated_image == "http_error":
-                st.error("An error occurred while processing your request. Please try again later.")
+                st.error("Tumia Lugha safi kidogo mkuu.")
             else:
                 st.image(f'./out/{generated_image}', caption='Generated Image', use_column_width=True)
                 st.success("Image generated successfully!")
