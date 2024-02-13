@@ -77,7 +77,7 @@ def main():
                 st.success("Image generated successfully!")
         else:
             st.warning("Please enter a text prompt.")
-     st.warning("PLEASE NOT THESE ARE AI GENERATED IMAGES AND MAY NOT BE ACCURATE!")
+    st.warning("PLEASE NOT THESE ARE AI GENERATED IMAGES AND MAY NOT BE ACCURATE!")
 
 if __name__ == "__main__":
     main()
