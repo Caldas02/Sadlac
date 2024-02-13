@@ -47,30 +47,34 @@ def generate_image(text_prompt):
         if not os.path.exists("./out"):
             os.makedirs("./out")
 
-        if "caldas" in text_prompt.lower():
-            return "invalid_search_flag"
+        if "caldas" in text_prompt.lower() or "caldas" in text_prompt.lower():
+            return "unique_name_message"
         
         image = data["artifacts"][0]
         with open(f'./out/txt2img_{image["seed"]}.png', "wb") as f:
             f.write(base64.b64decode(image["base64"]))
         return f'txt2img_{image["seed"]}.png'
     
-    except requests.exceptions.HTTPError:
-        return "http_error"
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 403:
+            return "invalid_search_flag"
+        else:
+            raise e
 
 def main():
     st.title("Text to Image Generator")
 
     st.write("This app generates images based on given text prompts.")
 
-    text_prompt = st.text_input("Enter text prompt")
+    text_prompt = st.text_input("Enter text prompt", "Type here...")
+
     if st.button("Generate Image"):
         if text_prompt:
             generated_image = generate_image(text_prompt)
-            if generated_image == "invalid_search_flag":
+            if generated_image == "unique_name_message":
+                st.error("The name is unique, we could not find an image that matches your search.")
+            elif generated_image == "invalid_search_flag":
                 st.error("Your search is flagged as invalid.")
-            elif generated_image == "http_error":
-                st.error("Tumia Lugha safi kidogo mkuu.")
             else:
                 st.image(f'./out/{generated_image}', caption='Generated Image', use_column_width=True)
                 st.success("Image generated successfully!")
